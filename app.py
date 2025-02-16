@@ -79,7 +79,7 @@ if uploaded_file is not None:
     hesap_icin_lengths[ekşen] = 0
     total_length = total_length - uzun_kenar * 16 - hesap_icin_lengths.sum() * 8
     total_length = total_length / 2
-    fiyat = total_length * 1.5
+    fiyat = total_length * 0.15
 
     # 🎯 **Sonuçları Göster**
     st.subheader("📊 Hesaplama Sonuçları")
