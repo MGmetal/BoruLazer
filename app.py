@@ -8,7 +8,7 @@ os.environ["DISPLAY"] = ":99"
 os.system("Xvfb :99 -screen 0 1024x768x24 &")
 
 # Başlık
-st.title("IGES Dosya Görüntüleyici ve Kesim Hesaplayıcı")
+st.title("MG METAL Boru Lazer CNC Fiyat Tahmin Uygulaması")
 
 # Kullanıcıdan IGES dosyası yüklemesini iste
 uploaded_file = st.file_uploader("Bir IGES dosyası yükleyin", type=["iges"])
