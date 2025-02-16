@@ -33,7 +33,8 @@ if uploaded_file is not None:
     
     # PNG olarak kaydet
     screenshot_path = "main_plot.png"
-    plotter.screenshot(screenshot_path)
+    plotter.screenshot(screenshot_path, scale=3.0)
+
 
     # Streamlit içinde göster
     st.image(screenshot_path, caption="Ana 3D Model", use_container_width=True)
@@ -54,7 +55,7 @@ if uploaded_file is not None:
         plotter.view_vector(view["position"], (0, 0, 1))
         plotter.camera.parallel_projection = True
         plotter.show_axes()
-        plotter.screenshot(view["file"])
+        plotter.screenshot(view["file"], scale=3.0)
         st.image(view["file"], caption=view["name"], use_container_width=True)
 
     # 🎯 **Kesim Uzunluğu Hesaplama**
