@@ -3,7 +3,8 @@ import numpy as np
 import pyvista as pv
 import pyiges
 import os
-os.system("apt-get update && apt-get install -y libgl1-mesa-glx")
+os.system("apt-get update && apt-get install -y libgl1-mesa-glx libglib2.0-0")
+
 
 # Başlık
 st.title("IGES Dosya Görüntüleyici ve Kesim Hesaplayıcı")
