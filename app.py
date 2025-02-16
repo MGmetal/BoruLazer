@@ -3,6 +3,9 @@ import numpy as np
 import pyvista as pv
 import pyiges
 import os
+os.system("pip install --upgrade pip")
+os.system("pip install --force-reinstall numpy pyvista vtk pyiges[full] geomdl opencv-python-headless")
+
 os.system("apt-get update && apt-get install -y libgl1-mesa-glx libglib2.0-0 mesa-utils")
 
 
