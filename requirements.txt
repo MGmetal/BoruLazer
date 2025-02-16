@@ -5,3 +5,4 @@ vtk
 pyiges[full]
 geomdl
 opencv-python-headless
+xvfbwrapper
