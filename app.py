@@ -22,25 +22,27 @@ if uploaded_file is not None:
     iges = pyiges.read("temp.iges")
 
     # Eksen seçimi
-    axis_option = st.selectbox("Parçanın uzandığı ekseni seçin:", ["X", "Y", "Z"])
+    axis_option = st.selectbox("Lütfen kesim eksenini seçin:", ["X", "Y", "Z"])
     axis_dict = {"X": 0, "Y": 1, "Z": 2}
     ekşen = axis_dict[axis_option]
 
     # VTK formatına çevirme
     lines = iges.to_vtk(surfaces=False, merge=False)
 
-    # 3D Model Görselleştirme
+    # 3D Model Görselleştirme - Ortogonal Görünümler
+    axes = [i for i in range(3) if i != ekşen]
     views = [
-        ("Ana 3D Model", (1, 1, 1), "main_plot.png"),
-        ("X Ekseninden Görünüm", (1, 0, 0), "view_x.png"),
-        ("Y Ekseninden Görünüm", (0, 1, 0), "view_y.png"),
-        ("Z Ekseninden Görünüm", (0, 0, 1), "view_z.png"),
+        (f"{['X', 'Y', 'Z'][axes[0]]} Ekseninden Görünüm", [1 if i == axes[0] else 0 for i in range(3)], "view_1.png"),
+        (f"-{['X', 'Y', 'Z'][axes[0]]} Ekseninden Görünüm", [-1 if i == axes[0] else 0 for i in range(3)], "view_2.png"),
+        (f"{['X', 'Y', 'Z'][axes[1]]} Ekseninden Görünüm", [1 if i == axes[1] else 0 for i in range(3)], "view_3.png"),
+        (f"-{['X', 'Y', 'Z'][axes[1]]} Ekseninden Görünüm", [-1 if i == axes[1] else 0 for i in range(3)], "view_4.png"),
     ]
 
     for title, position, file in views:
         plotter = pv.Plotter(off_screen=True)
         plotter.add_mesh(lines, color="b", line_width=2)
         plotter.view_vector(position, (0, 0, 1))
+        plotter.camera.parallel_projection = True
         plotter.show_axes()
         plotter.screenshot(file, scale=3.0)
         st.subheader(f"📷 {title}")
@@ -69,8 +71,8 @@ if uploaded_file is not None:
 
     # Kullanıcıdan fiyat girdileri ve adet bilgisi
     adet = st.number_input("Kaç adet üretilecek?", min_value=1, value=1, step=1)
-    perakende_tl_cm = st.number_input("Perakende fiyatı (TL/cm) - 1 adet için", min_value=0.0, value=0.15, step=0.01)
-    toptan_tl_cm = st.number_input("Toptan fiyatı (TL/cm) - 1000 adet için", min_value=0.0, value=0.10, step=0.01)
+    perakende_tl_cm = st.number_input("Perakende fiyatı (TL/cm)", min_value=0.0, value=0.15, step=0.01)
+    toptan_tl_cm = st.number_input("Toptan fiyatı (TL/cm)", min_value=0.0, value=0.10, step=0.01)
     
     # Lineer fiyat orantısı
     if adet >= 1000:
