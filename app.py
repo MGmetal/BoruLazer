@@ -5,32 +5,17 @@ import pyiges
 import os
 import subprocess
 
+# PyVista'nın kendi Xvfb'yi başlatmasını sağla
+import pyvista
+pyvista.start_xvfb()
+
 os.environ["PYVISTA_OFF_SCREEN"] = "true"
+os.environ["DISPLAY"] = ":99"
 
-# X11 ve Xvfb kilit dosyasını kontrol et ve ilgili süreci öldür
-lock_file = "/tmp/.X99-lock"
-x11_dir = "/tmp/.X11-unix"
-
-# X11 dizini yoksa oluştur ve izinleri ayarla
-if not os.path.exists(x11_dir):
-    os.makedirs(x11_dir, mode=0o1777, exist_ok=True)
-
-# Eğer Xvfb kilit dosyası varsa, içindeki PID'yi öldür
-if os.path.exists(lock_file):
-    try:
-        with open(lock_file, "r") as f:
-            pid = f.read().strip()
-        if pid.isdigit():
-            subprocess.run(["kill", "-9", pid], check=False)
-        os.remove(lock_file)
-    except Exception as e:
-        print(f"Hata oluştu: {e}")
-
-# Xvfb zaten çalışıyorsa yeniden başlatma
+# Xvfb'nin çalıştığını kontrol et, yoksa başlat
 try:
     xvfb_check = subprocess.run(["pgrep", "Xvfb"], capture_output=True, text=True)
     if not xvfb_check.stdout.strip():
-        os.environ["DISPLAY"] = ":99"
         os.system("Xvfb :99 -ac -screen 0 1024x768x24 +extension GLX +render -noreset &")
 except Exception as e:
     print(f"Xvfb başlatılamadı: {e}")
