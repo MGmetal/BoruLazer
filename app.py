@@ -88,7 +88,7 @@ if uploaded_file is not None:
     toplam_fiyat = birim_parca_fiyat * adet
     hammadde_birim_fiyat = (uzun_kenar / 6000) * hammadde_fiyati_6m
     hammadde_fiyat = hammadde_birim_fiyat * adet
-    birim_fiyat = hammadde_birim_fiyat + birim_parca_fiyat
+    birim_parca_fiyat = hammadde_birim_fiyat + birim_parca_fiyat
     toplam_maliyet = toplam_fiyat + hammadde_fiyat
     
     # Sonuçları Göster
@@ -96,7 +96,7 @@ if uploaded_file is not None:
     st.write(f"**Kesim Birim Uzunluk Fiyatı:** {birim_fiyat:.2f} TL/cm")
     st.write(f"**Kesim Parça Fiyatı:** {birim_parca_fiyat:.2f} TL")
     st.write(f"**Hammadde Parça Maliyeti:** {hammadde_birim_fiyat:.2f} TL")
-    st.write(f"**Toplam Parça Maliyeti:** {birim_fiyat:.2f} TL")
+    st.write(f"**Toplam Parça Maliyeti:** {birim_parca_fiyat:.2f} TL")
     st.write(f"**Toplam Maliyet:** {toplam_maliyet:.2f} TL")
 
     st.success("✅ 3D model başarıyla yüklendi ve hesaplandı!")
