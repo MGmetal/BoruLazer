@@ -94,9 +94,10 @@ if uploaded_file is not None:
     # Sonuçları Göster
     st.subheader("📊 Hesaplama Sonuçları")
     st.write(f"**Kesim Birim Uzunluk Fiyatı:** {birim_fiyat:.2f} TL/cm")
+    st.write(f"**Parça Başına Kesim Uzunluğu:** {total_length:.2f} cm")
     st.write(f"**Kesim Parça Fiyatı:** {birim_parca_fiyat:.2f} TL")
     st.write(f"**Hammadde Parça Maliyeti:** {hammadde_birim_fiyat:.2f} TL")
-    st.write(f"**Toplam Parça Maliyeti:** {parca_toplam_fiyat:.2f} TL")
-    st.write(f"**Toplam Maliyet:** {toplam_maliyet:.2f} TL")
+    st.write(f"**Toplam Parça Fiyatı:** {parca_toplam_fiyat:.2f} TL")
+    st.write(f"**Toplam Fiyat:** {toplam_maliyet:.2f} TL")
 
     st.success("✅ 3D model başarıyla yüklendi ve hesaplandı!")
