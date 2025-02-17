@@ -5,6 +5,7 @@ import pyiges
 import os
 
 os.environ["PYVISTA_OFF_SCREEN"] = "true"
+os.system("rm -f /tmp/.X99-lock")
 os.environ["DISPLAY"] = ":99"
 os.system("Xvfb :99 -screen 0 1024x768x24 &")
 
