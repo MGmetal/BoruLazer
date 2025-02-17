@@ -3,7 +3,7 @@ import numpy as np
 import pyvista as pv
 import pyiges
 import os
-
+import subprocess
 os.environ["PYVISTA_OFF_SCREEN"] = "true"
 
 # X11 ve Xvfb kilit dosyasını kontrol et ve ilgili süreci öldür
