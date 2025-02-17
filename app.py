@@ -15,7 +15,8 @@ if os.path.exists(lock_file):
     os.remove(lock_file)
     
 os.environ["DISPLAY"] = ":99"
-os.system("Xvfb :99 -screen 0 1024x768x24 &")
+os.system("Xvfb :99 -ac -screen 0 1024x768x24 +extension GLX +render -noreset &")
+
 
 # Başlık
 st.title("MG Metal \n Boru Lazer CNC Fiyat Tahmin Uygulaması")
