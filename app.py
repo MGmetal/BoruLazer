@@ -94,7 +94,7 @@ if uploaded_file is not None:
     # Sonuçları Göster
     st.subheader("📊 Hesaplama Sonuçları")
     st.write(f"**Kesim Birim Uzunluk Fiyatı:** {birim_fiyat:.2f} TL/cm")
-    st.write(f"**Parça Başına Kesim Uzunluğu:** {total_length:.2f} cm")
+    st.write(f"**Parça Başına Kesim Uzunluğu:** {total_length/10:.2f} cm")
     st.write(f"**Kesim Parça Fiyatı:** {birim_parca_fiyat:.2f} TL")
     st.write(f"**Hammadde Parça Maliyeti:** {hammadde_birim_fiyat:.2f} TL")
     st.write(f"**Toplam Parça Fiyatı:** {parca_toplam_fiyat:.2f} TL")
