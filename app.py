@@ -59,14 +59,21 @@ if uploaded_file is not None:
     total_length = total_length - uzun_kenar * 16 - hesap_icin_lengths.sum() * 8
     total_length = total_length / 2
 
-    # Kullanıcıdan fiyat girdileri
+    # Kullanıcıdan fiyat girdileri ve adet bilgisi
+    adet = st.number_input("Kaç adet üretilecek?", min_value=1, value=1, step=1)
     perakende_tl_cm = st.number_input("Perakende fiyatı (TL/cm)", min_value=0.0, value=0.15, step=0.01)
     toptan_tl_cm = st.number_input("Toptan fiyatı (TL/cm)", min_value=0.0, value=0.10, step=0.01)
-    adet = st.number_input("Kaç adet üretilecek?", min_value=1, value=1, step=1)
-
+    
+    # Lineer fiyat orantısı
+    if adet >= 1000:
+        birim_fiyat = toptan_tl_cm
+    elif adet == 1:
+        birim_fiyat = perakende_tl_cm
+    else:
+        birim_fiyat = perakende_tl_cm - ((perakende_tl_cm - toptan_tl_cm) * (adet / 1000))
+    
     # Fiyat Hesaplama
-    fiyat_perakende = total_length * perakende_tl_cm * adet
-    fiyat_toptan = total_length * toptan_tl_cm * max(adet, 1000)
+    toplam_fiyat = total_length * birim_fiyat * adet
 
     # Sonuçları Göster
     st.subheader("📊 Hesaplama Sonuçları")
@@ -75,7 +82,7 @@ if uploaded_file is not None:
     st.write(f"- **Y:** {y_length} mm")
     st.write(f"- **Z:** {z_length} mm")
     st.write(f"**Kesim Yapılan Uzunluk:** {total_length:.2f} mm")
-    st.write(f"**Tahmini Perakende Fiyat:** {fiyat_perakende:.2f} TL")
-    st.write(f"**Tahmini Toptan Fiyat:** {fiyat_toptan:.2f} TL")
+    st.write(f"**Birim Fiyat:** {birim_fiyat:.4f} TL/cm")
+    st.write(f"**Toplam Fiyat:** {toplam_fiyat:.2f} TL")
 
     st.success("✅ 3D model başarıyla yüklendi ve hesaplandı!")
