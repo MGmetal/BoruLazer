@@ -4,6 +4,7 @@ import pyvista as pv
 import pyiges
 import os
 import subprocess
+
 os.environ["PYVISTA_OFF_SCREEN"] = "true"
 
 # X11 ve Xvfb kilit dosyasını kontrol et ve ilgili süreci öldür
@@ -26,10 +27,13 @@ if os.path.exists(lock_file):
         print(f"Hata oluştu: {e}")
 
 # Xvfb zaten çalışıyorsa yeniden başlatma
-xvfb_check = subprocess.run(["pgrep", "Xvfb"], capture_output=True, text=True)
-if not xvfb_check.stdout.strip():
-    os.environ["DISPLAY"] = ":99"
-    os.system("Xvfb :99 -ac -screen 0 1024x768x24 +extension GLX +render -noreset &")
+try:
+    xvfb_check = subprocess.run(["pgrep", "Xvfb"], capture_output=True, text=True)
+    if not xvfb_check.stdout.strip():
+        os.environ["DISPLAY"] = ":99"
+        os.system("Xvfb :99 -ac -screen 0 1024x768x24 +extension GLX +render -noreset &")
+except Exception as e:
+    print(f"Xvfb başlatılamadı: {e}")
 
 
 
