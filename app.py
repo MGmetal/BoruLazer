@@ -5,7 +5,15 @@ import pyiges
 import os
 
 os.environ["PYVISTA_OFF_SCREEN"] = "true"
-os.system("rm -f /tmp/.X99-lock")
+# Xvfb kilit dosyasını kontrol et ve ilgili süreci öldür
+lock_file = "/tmp/.X99-lock"
+if os.path.exists(lock_file):
+    with open(lock_file, "r") as f:
+        pid = f.read().strip()
+        if pid.isdigit():
+            os.system(f"sudo kill -9 {pid}")
+    os.remove(lock_file)
+    
 os.environ["DISPLAY"] = ":99"
 os.system("Xvfb :99 -screen 0 1024x768x24 &")
 
