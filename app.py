@@ -100,7 +100,7 @@ if uploaded_file is not None:
     st.write(f"**Parça Başına Kesim Uzunluğu:** {parcabasikesimcm:.2f} cm")
     st.write(f"**Kesim Parça Fiyatı:** {birim_parca_fiyat:.2f} TL")
     st.write(f"**Hammadde Parça Maliyeti:** {hammadde_birim_fiyat:.2f} TL")
-    st.write(f"**Toplam Parça Fiyatı:** {parca_toplam_fiyat:.2f} TL")
+    st.write(f"**Parça Fiyatı:** {parca_toplam_fiyat:.2f} TL")
     st.write(f"**Toplam Fiyat:** {toplam_maliyet:.2f} TL")
 
     st.success("✅ 3D model başarıyla yüklendi ve hesaplandı!")
