@@ -12,14 +12,6 @@ pyvista.start_xvfb()
 os.environ["PYVISTA_OFF_SCREEN"] = "true"
 os.environ["DISPLAY"] = ":99"
 
-# Xvfb'nin çalıştığını kontrol et, yoksa başlat
-try:
-    xvfb_check = subprocess.run(["aux"], capture_output=True, text=True)
-    if "Xvfb" not in xvfb_check.stdout:
-        os.system("Xvfb :99 -ac -screen 0 1024x768x24 +extension GLX +render -noreset &")
-except Exception as e:
-    print(f"Xvfb başlatılamadı: {e}")
-
 
 
 # Başlık
