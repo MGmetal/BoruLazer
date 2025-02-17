@@ -84,6 +84,7 @@ if uploaded_file is not None:
         birim_fiyat = perakende_tl_cm - ((perakende_tl_cm - toptan_tl_cm) * (adet / 1000))
     
     # Fiyat Hesaplama
+    parcabasikesimcm = total_length/10
     birim_parca_fiyat = total_length * birim_fiyat
     toplam_fiyat = birim_parca_fiyat * adet
     hammadde_birim_fiyat = (uzun_kenar / 6000) * hammadde_fiyati_6m
@@ -94,7 +95,7 @@ if uploaded_file is not None:
     # Sonuçları Göster
     st.subheader("📊 Hesaplama Sonuçları")
     st.write(f"**Kesim Birim Uzunluk Fiyatı:** {birim_fiyat:.2f} TL/cm")
-    st.write(f"**Parça Başına Kesim Uzunluğu:** {total_length/10:.2f} cm")
+    st.write(f"**Parça Başına Kesim Uzunluğu:** {parcabasikesimcm:.2f} cm")
     st.write(f"**Kesim Parça Fiyatı:** {birim_parca_fiyat:.2f} TL")
     st.write(f"**Hammadde Parça Maliyeti:** {hammadde_birim_fiyat:.2f} TL")
     st.write(f"**Toplam Parça Fiyatı:** {parca_toplam_fiyat:.2f} TL")
