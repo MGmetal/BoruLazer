@@ -73,6 +73,7 @@ if uploaded_file is not None:
     adet = st.number_input("Kaç adet üretilecek?", min_value=1, value=1, step=1)
     perakende_tl_cm = st.number_input("Perakende fiyatı - 1 adet için (TL/cm)", min_value=0.0, value=0.15, step=0.01)
     toptan_tl_cm = st.number_input("Toptan fiyatı - 1000 adet için (TL/cm)", min_value=0.0, value=0.10, step=0.01)
+    hammadde_fiyati_6m = st.number_input("6 metre profil fiyatı (TL)", min_value=0.0, value=100.0, step=1.0)
     
     # Lineer fiyat orantısı
     if adet >= 1000:
@@ -85,16 +86,14 @@ if uploaded_file is not None:
     # Fiyat Hesaplama
     birim_parca_fiyat = total_length * birim_fiyat
     toplam_fiyat = birim_parca_fiyat * adet
+    hammadde_fiyat = (uzun_kenar / 6000) * hammadde_fiyati_6m * adet
+    toplam_maliyet = toplam_fiyat + hammadde_fiyat
 
     # Sonuçları Göster
     st.subheader("📊 Hesaplama Sonuçları")
-    st.write(f"**Parçanın Boyutları:**")
-    st.write(f"- **X:** {x_length} mm")
-    st.write(f"- **Y:** {y_length} mm")
-    st.write(f"- **Z:** {z_length} mm")
-    st.write(f"**Kesim Yapılan Uzunluk:** {total_length:.2f} mm")
-    st.write(f"**Birim Fiyat:** {birim_fiyat:.4f} TL/cm")
     st.write(f"**Birim Parça Fiyatı:** {birim_parca_fiyat:.2f} TL")
     st.write(f"**Toplam Fiyat:** {toplam_fiyat:.2f} TL")
+    st.write(f"**Hammadde Maliyeti:** {hammadde_fiyat:.2f} TL")
+    st.write(f"**Toplam Maliyet:** {toplam_maliyet:.2f} TL")
 
     st.success("✅ 3D model başarıyla yüklendi ve hesaplandı!")
