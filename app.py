@@ -29,13 +29,14 @@ if uploaded_file is not None:
     # VTK formatına çevirme
     lines = iges.to_vtk(surfaces=False, merge=False)
 
-    # 3D Model Görselleştirme - Ortogonal Görünümler
+    # 3D Model Görselleştirme - Ortogonal ve İzometrik Görünümler
     axes = [i for i in range(3) if i != ekşen]
     views = [
         (f"{['X', 'Y', 'Z'][axes[0]]} Ekseninden Görünüm", [1 if i == axes[0] else 0 for i in range(3)], "view_1.png"),
         (f"-{['X', 'Y', 'Z'][axes[0]]} Ekseninden Görünüm", [-1 if i == axes[0] else 0 for i in range(3)], "view_2.png"),
         (f"{['X', 'Y', 'Z'][axes[1]]} Ekseninden Görünüm", [1 if i == axes[1] else 0 for i in range(3)], "view_3.png"),
         (f"-{['X', 'Y', 'Z'][axes[1]]} Ekseninden Görünüm", [-1 if i == axes[1] else 0 for i in range(3)], "view_4.png"),
+        ("İzometrik Görünüm", [1, 1, 1], "view_iso.png"),
     ]
 
     for title, position, file in views:
@@ -84,7 +85,7 @@ if uploaded_file is not None:
         birim_fiyat = perakende_tl_cm - ((perakende_tl_cm - toptan_tl_cm) * (adet / 1000))
     
     # Fiyat Hesaplama
-    parcabasikesimcm = total_length/10
+    parcabasikesimcm = total_length / 10
     birim_parca_fiyat = total_length * birim_fiyat / 10
     toplam_fiyat = birim_parca_fiyat * adet
     hammadde_birim_fiyat = (uzun_kenar / 6000) * hammadde_fiyati_6m
@@ -94,6 +95,7 @@ if uploaded_file is not None:
     
     # Sonuçları Göster
     st.subheader("📊 Hesaplama Sonuçları")
+    st.write(f"**Parça Boyutları:** X: {x_length} mm, Y: {y_length} mm, Z: {z_length} mm")
     st.write(f"**Kesim Birim Uzunluk Fiyatı:** {birim_fiyat:.4f} TL/cm")
     st.write(f"**Parça Başına Kesim Uzunluğu:** {parcabasikesimcm:.2f} cm")
     st.write(f"**Kesim Parça Fiyatı:** {birim_parca_fiyat:.2f} TL")
