@@ -71,8 +71,8 @@ if uploaded_file is not None:
 
     # Kullanıcıdan fiyat girdileri ve adet bilgisi
     adet = st.number_input("Kaç adet üretilecek?", min_value=1, value=1, step=1)
-    perakende_tl_cm = st.number_input("Kesim Perakende fiyatı - 1 adet için (TL/cm)", min_value=0.0, value=0.15, step=0.01)
-    toptan_tl_cm = st.number_input("Kesim Toptan fiyatı - 1000 adet için (TL/cm)", min_value=0.0, value=0.10, step=0.01)
+    perakende_tl_cm = st.number_input("Kesim Perakende fiyatı - 1 adet için (TL/cm)", min_value=0.0, value=1.5, step=0.01)
+    toptan_tl_cm = st.number_input("Kesim Toptan fiyatı - 1000 adet için (TL/cm)", min_value=0.0, value=1.0, step=0.01)
     hammadde_fiyati_6m = st.number_input("6 metre profil fiyatı (TL)", min_value=0.0, value=100.0, step=1.0)
     
     # Lineer fiyat orantısı
@@ -85,7 +85,7 @@ if uploaded_file is not None:
     
     # Fiyat Hesaplama
     parcabasikesimcm = total_length/10
-    birim_parca_fiyat = total_length * birim_fiyat
+    birim_parca_fiyat = total_length * birim_fiyat / 10
     toplam_fiyat = birim_parca_fiyat * adet
     hammadde_birim_fiyat = (uzun_kenar / 6000) * hammadde_fiyati_6m
     hammadde_fiyat = hammadde_birim_fiyat * adet
