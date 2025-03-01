@@ -69,7 +69,7 @@ if uploaded_file is not None:
     lines = iges.to_vtk(surfaces=False, merge=False)
 
     # 3D Model Görselleştirme - Ortogonal ve İzometrik Görünümler
-    axes = [i for i in range(3) if i != ekşen]
+    axes = [i for i in range(3) if i != eksen]
     views = [
         (f"{['X', 'Y', 'Z'][axes[0]]} Ekseninden Görünüm", [1 if i == axes[0] else 0 for i in range(3)], "view_1.png"),
         (f"-{['X', 'Y', 'Z'][axes[0]]} Ekseninden Görünüm", [-1 if i == axes[0] else 0 for i in range(3)], "view_2.png"),
