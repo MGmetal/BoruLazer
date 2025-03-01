@@ -4,9 +4,42 @@ import pyvista as pv
 import pyiges
 import os
 import subprocess
-
-# PyVista'nın kendi Xvfb'yi başlatmasını sağla
 import pyvista
+
+def find_bounds(line_list):
+    if not line_list:
+        return None  # Boş liste olursa None döndür
+
+    all_points = np.concatenate([np.array(line.points) for line in line_list])  # Tüm noktaları birleştir
+    min_bounds = np.min(all_points, axis=0)  # Her eksende en küçük değerleri al
+    max_bounds = np.max(all_points, axis=0)  # Her eksende en büyük değerleri al
+
+    return min_bounds, max_bounds  # (min, max) olarak döndür
+
+def filter_lines_by_own_bound(lines, bound_axis):
+    if not lines:
+        return []  
+
+    min_bounds, max_bounds = find_bounds(lines)
+    min_bound, max_bound = min_bounds[bound_axis], max_bounds[bound_axis]
+
+    # Filtreleme işlemi
+    filtered_lines = [
+        line for line in lines if np.any(
+            (np.array(line.points)[:, bound_axis] >= min_bound + 0.01) & 
+            (np.array(line.points)[:, bound_axis] <= max_bound - 0.01)
+        )
+    ]
+
+    return filtered_lines
+def calculate_total_length(lines):
+    total_length = 0.0
+    for line in lines:
+        total_length += line.length 
+    
+    return total_length
+
+
 pyvista.start_xvfb()
 
 os.environ["PYVISTA_OFF_SCREEN"] = "true"
@@ -30,7 +63,7 @@ if uploaded_file is not None:
     # Eksen seçimi
     axis_option = st.selectbox("Parçanın uzandığı ekseni seçin:", ["X", "Y", "Z"])
     axis_dict = {"X": 0, "Y": 1, "Z": 2}
-    ekşen = axis_dict[axis_option]
+    eksen = axis_dict[axis_option]
 
     # VTK formatına çevirme
     lines = iges.to_vtk(surfaces=False, merge=False)
@@ -61,21 +94,70 @@ if uploaded_file is not None:
     y_length = round(bounds[3] - bounds[2], 1)
     z_length = round(bounds[5] - bounds[4], 1)
     lengths = np.array([x_length, y_length, z_length])
-    uzun_kenar = lengths[ekşen]
+    uzun_kenar = lengths[eksen]
 
-    # Kesim Uzunluğu Hesaplama
-    total_length = 0
+    y_plus_list = []
+    y_minus_list = []
+    z_plus_list = []
+    z_minus_list = []
+    x_plus_list = []
+    x_minus_list = []
+    
     for line in lines:
         points = np.array(line.points)
-        if len(points) > 1:
-            for j in range(len(points) - 1):
-                total_length += np.linalg.norm(points[j + 1] - points[j])
+    
+        if eksen == 0:
+            if np.all(points[:, 1] >= bounds[3] - 0.1): y_plus_list.append(line)
+            if np.all(points[:, 1] <= bounds[2] + 0.1): y_minus_list.append(line)
+            if np.all(points[:, 2] >= bounds[5] - 0.1): z_plus_list.append(line)
+            if np.all(points[:, 2] <= bounds[4] + 0.1): z_minus_list.append(line)
+            filtered_y_plus = filter_lines_by_own_bound(y_plus_list, bound_axis=2)
+            filtered_y_minus = filter_lines_by_own_bound(y_minus_list, bound_axis=2)
+            filtered_z_plus = filter_lines_by_own_bound(z_plus_list, bound_axis=1)
+            filtered_z_minus = filter_lines_by_own_bound(z_minus_list, bound_axis=1)
+            total_lines = filtered_y_plus + filtered_y_minus + filtered_z_plus + filtered_z_minus
+            total_filtered_length = calculate_total_length(total_lines)
+    
+        elif eksen == 1:
+            if np.all(points[:, 0] >= bounds[1] - 0.1): x_plus_list.append(line)
+            if np.all(points[:, 0] <= bounds[0] + 0.1): x_minus_list.append(line)
+            if np.all(points[:, 2] >= bounds[5] - 0.1): z_plus_list.append(line)
+            if np.all(points[:, 2] <= bounds[4] + 0.1): z_minus_list.append(line)
+            filtered_x_plus = filter_lines_by_own_bound(x_plus_list, bound_axis=2)
+            filtered_x_minus = filter_lines_by_own_bound(x_minus_list, bound_axis=2)
+            filtered_z_plus = filter_lines_by_own_bound(z_plus_list, bound_axis=0)
+            filtered_z_minus = filter_lines_by_own_bound(z_minus_list, bound_axis=0)
+            total_lines = filtered_x_plus + filtered_x_minus + filtered_z_plus + filtered_z_minus
+            total_filtered_length = calculate_total_length(total_lines)
+    
+        elif eksen == 2:
+            if np.all(points[:, 0] >= bounds[1] - 0.1): x_plus_list.append(line)
+            if np.all(points[:, 0] <= bounds[0] + 0.1): x_minus_list.append(line)
+            if np.all(points[:, 1] >= bounds[3] - 0.1): y_plus_list.append(line)
+            if np.all(points[:, 1] <= bounds[2] + 0.1): y_minus_list.append(line)
+            filtered_x_plus = filter_lines_by_own_bound(x_plus_list, bound_axis=1)
+            filtered_x_minus = filter_lines_by_own_bound(x_minus_list, bound_axis=1)
+            filtered_y_plus = filter_lines_by_own_bound(y_plus_list, bound_axis=0)
+            filtered_y_minus = filter_lines_by_own_bound(y_minus_list, bound_axis=0)
+            total_lines = filtered_x_plus + filtered_x_minus + filtered_y_plus + filtered_y_minus
+            total_filtered_length = calculate_total_length(total_lines)
+    st.subheader("✂️ Kesilecek Yerler")
 
-    hesap_icin_lengths = lengths.copy()
-    hesap_icin_lengths[ekşen] = 0
-    total_length = total_length - uzun_kenar * 16 - hesap_icin_lengths.sum() * 8
-    total_length = total_length / 2
-
+    filtered_lines = filtered_y_plus + filtered_y_minus + filtered_z_plus + filtered_z_minus
+    
+    if filtered_lines:
+        filtered_plot = pv.MultiBlock(filtered_lines)
+        plotter = pv.Plotter(off_screen=True)
+        plotter.add_mesh(filtered_plot, color='r', line_width=3)
+        plotter.show_axes()
+        
+        screenshot_path = "filtered_plot.png"
+        plotter.screenshot(screenshot_path, scale=3.0)
+        
+        st.image(screenshot_path, caption="Kesilecek Yerler", use_container_width=True)
+    else:
+        st.warning("Kesilecek çizgiler bulunamadı.")
+    total_length = total_filtered_length
     # Kullanıcıdan fiyat girdileri ve adet bilgisi
     adet = st.number_input("Kaç adet üretilecek?", min_value=1, value=1, step=1)
     perakende_tl_cm = st.number_input("Kesim Perakende fiyatı - 1 adet için (TL/cm)", min_value=0.0, value=1.5, step=0.01)
